@@ -21,12 +21,13 @@
 #
 
 SOURCE := Signals.h
-PKGCONFIG := signals.pc
+EXAMPLE := Example.cpp
 
 PREFIX := /usr/local
 INCLUDEDIR := $(PREFIX)/include
-PKGCONFIGDIR := $(PREFIX)/lib/pkgconfig
+DATADIR := $(PREFIX)/share
 
 install:
-	cp $(PKGCONFIG) $(PKGCONFIGDIR)
-	cp $(SOURCE) $(INCLUDEDIR)
+	mkdir -p $(DESTDIR)/$(INCLUDEDIR) $(DESTDIR)/$(DATADIR)/signals
+	cp $(SOURCE) $(DESTDIR)/$(INCLUDEDIR)
+	cp $(EXAMPLE) $(DESTDIR)/$(DATADIR)/signals
