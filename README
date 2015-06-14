@@ -7,6 +7,15 @@ Signals project is header only C++ library to be used wherever observer-alike
 pattern is required. Signals utilizes C++11 std::function template for
 callable targets wrapping.
 
+The Example.cpp may be compiled as:
+$ g++ -std=c++11 -Wall -pedantic -O2 -I. Example.cpp -o example
+$ ./example
+Object::getId(6): this->id = 1
+Object::getId(6): this->id = 2
+Object::getId(6): this->id = 2
+Object::getId(7): this->id = 1
+Object::getId(7): this->id = 2
+
 If you are interested in this signal-slot implementation, you can contact me
 via santa.ssh@gmail.com
 

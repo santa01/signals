@@ -1,19 +1,18 @@
 #include <iostream>
+#include <functional>
 #include <Signals.h>
 
-class Caller {
-public:
-    Signals::Signal<> mySignal;
-};
+using namespace std;
+using namespace Signals;
 
-class Callee {
+class Object {
 public:
-    Callee(int id) {
+    Object(int id) {
         this->id = id;
     }
 
-    void getId() {
-        std::cout << "Callee::mySlot() id = " << this->id << std::endl;
+    void getId(int param) {
+        std::cout << "Object::getId(" << param << "): id = " << this->id << std::endl;
     }
 
 private:
@@ -21,19 +20,19 @@ private:
 };
 
 int main() {
-    Caller cr;
-    Callee ce1(1), ce2(2);
+    Signal<int> signal;
+    Object obj1(1), obj2(2);
 
-    cr.mySignal.connect(std::bind(&Callee::getId, &ce1));
-    cr.mySignal.connect(std::bind(&Callee::getId, &ce2));
-    int handle = cr.mySignal.connect(std::bind(&Callee::getId, &ce2));
-    cr.mySignal();
+    signal.connect(Slot<int>(&Object::getId, &obj1, placeholders::_1));
+    signal.connect(Slot<int>(&Object::getId, &obj2, placeholders::_1));
+    auto handle = signal.connect(Slot<int>(&Object::getId, &obj2, placeholders::_1));
+    signal(6);
 
-    cr.mySignal.disconnect(handle);
-    cr.mySignal();
+    signal.disconnect(handle);
+    signal(7);
 
-    cr.mySignal.disconnectAll();
-    cr.mySignal();
+    signal.disconnectAll();
+    signal(8);
 
     return 0;
 }
