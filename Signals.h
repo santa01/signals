@@ -24,22 +24,19 @@
 #define SIGNALS_H
 
 #include <functional>
-#include <vector>
+#include <list>
 
 namespace Signals {
 
 template<typename... Types>
 class Slot {
 public:
-    Slot(const std::function<void(Types...)>& callable):
-            callable(callable) {
+    template<typename F, typename... Args>
+    Slot(F&& f, Args&&... args):
+            callable(std::bind(f, args...)) {
     }
 
-    Slot& operator =(const std::function<void(Types...)>& callable) {
-        this->callable = callable;
-    }
-
-    void operator() (Types... args) {
+    void operator ()(Types... args) {
         this->callable(args...);
     }
 
@@ -47,30 +44,44 @@ private:
     std::function<void(Types...)> callable;
 };
 
-template<typename... types>
+template<typename... Types>
 class Signal {
 public:
-    void operator() (types... args) {
-        for (auto& callable: this->callables) {
-            callable(args...);
+    using SlotType = Slot<Types...>;
+    using SlotIterator = typename std::list<SlotType>::iterator;
+
+    class SlotHandle {
+    private:
+        SlotHandle() = delete;
+        SlotHandle(const SlotIterator& iterator):
+                iterator(iterator) {
+        }
+
+        friend class Signal;
+        SlotIterator iterator;
+    };
+
+    void operator ()(Types... args) {
+        for (auto& slot: this->slots) {
+            slot(args...);
         }
     }
 
-    int connect(const std::function<void(types...)>& callable) {
-        this->callables.push_back(Slot<types...>(callable));
-        return this->callables.size() - 1;
+    SlotHandle connect(const SlotType& slot) {
+        this->slots.push_back(slot);
+        return SlotHandle(--this->slots.end());
     }
 
-    void disconnect(int handle) {
-        this->callables.erase(this->callables.begin() + handle);
+    void disconnect(const SlotHandle& handle) {
+        this->slots.erase(handle.iterator);
     }
 
     void disconnectAll() {
-        this->callables.clear();
+        this->slots.clear();
     }
 
 private:
-    std::vector<Slot<types...>> callables;
+    std::list<SlotType> slots;
 };
 
 }  // namespace Signals
