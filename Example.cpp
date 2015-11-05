@@ -34,5 +34,10 @@ int main() {
     signal.disconnectAll();
     signal(8);
 
+    Signal<int, int&&, const int&> rval_ref_signal;
+    rval_ref_signal.connect(Slot<int, int&&, const int&>([](int, int&&, const int&) { ; },
+                            placeholders::_1, placeholders::_2, placeholders::_3));
+    rval_ref_signal(1, 3, 5);
+
     return 0;
 }
