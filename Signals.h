@@ -37,7 +37,7 @@ public:
     }
 
     void operator ()(Types... args) {
-        this->callable(args...);
+        this->callable(std::forward<Types>(args)...);
     }
 
 private:
@@ -63,7 +63,7 @@ public:
 
     void operator ()(Types... args) {
         for (auto& slot: this->slots) {
-            slot(args...);
+            slot(std::forward<Types>(args)...);
         }
     }
 
