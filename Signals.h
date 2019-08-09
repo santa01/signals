@@ -24,6 +24,7 @@
 #define SIGNALS_H
 
 #include <functional>
+#include <utility>
 #include <list>
 
 namespace Signals {

@@ -12,9 +12,10 @@ $ g++ -std=c++11 -Wall -pedantic -O2 -I. Example.cpp -o example
 $ ./example
 Object::getId(6): this->id = 1
 Object::getId(6): this->id = 2
-Object::getId(6): this->id = 2
-Object::getId(7): this->id = 1
+Object::getId(6): this->id = 3
 Object::getId(7): this->id = 2
+Object::getId(7): this->id = 3
+Object::updateId(4, 3): this->id = 5
 
 If you are interested in this signal-slot implementation, you can contact me
 via santa.ssh@gmail.com
