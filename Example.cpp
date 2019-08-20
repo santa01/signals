@@ -52,7 +52,8 @@ int main(int /*argc*/, char** /*argv*/) {
     signal.connect(Signals::Slot<int>(&Object::getId, &obj3, std::placeholders::_1));
     signalRvalue.connect(Signals::Slot<int&&, int, const int&>(&Object::updateId, &obj3, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
-    signal(6);
+    int param = 6;
+    signal(param);
 
     signal.disconnect(handle);
     signal(7);
@@ -60,7 +61,8 @@ int main(int /*argc*/, char** /*argv*/) {
     signal.disconnectAll();
     signal(8);
 
-    signalRvalue(5, 4, 3);
+    const int constParam = 3;
+    signalRvalue(5, 4, constParam);
 
     return 0;
 }

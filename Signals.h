@@ -32,9 +32,9 @@ namespace Signals {
 template<typename... Types>
 class Slot {
 public:
-    template<typename F, typename... Args>
-    Slot(F&& f, Args&&... args):
-            callable(std::bind(f, args...)) {
+    template<typename Func, typename... Args>
+    Slot(Func&& func, Args&&... args):
+            callable(std::bind(std::forward<Func>(func), std::forward<Args>(args)...)) {
     }
 
     void operator ()(Types... args) {
